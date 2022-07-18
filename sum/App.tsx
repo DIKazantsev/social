@@ -5,17 +5,19 @@ import { Link } from 'react-router-dom';
 
 
 
-const App: React.FC = () => {
-  const [showText, setShow] = useState(true)
+const App: React.FC = (props: any) => {
+  const [showText, setShow] = useState(false)
 
 
   const handleBtnClick = () => {
     setShow(!showText)
+
   }
 
 
   return (
     <div className="App">
+      <div className='prop-value'>{props.count}</div>
       <header className="App-header">
         <Button
           type='primary'
@@ -24,9 +26,9 @@ const App: React.FC = () => {
         >
           Показать текст
         </Button>
-        <div className='block-text'>{showText ? 'Вот мой текст' : ''}</div>
+        <div className='block-text'>{showText ? 'Мой текст' : ''}</div>
       </header>
-      <Link to="/expenses">Expenses</Link>
+      {/* <Link to="/expenses">Expenses</Link> */}
     </div>
   );
 
