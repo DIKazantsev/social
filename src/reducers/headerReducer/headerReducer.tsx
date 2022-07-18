@@ -10,7 +10,6 @@ const headerReduser = (state = initialState, action: any): any => {
     switch (action.type) {
         case CHANGE_NAME:
             return { ...state, login: '65MAS' }
-
         default:
             return state
     }

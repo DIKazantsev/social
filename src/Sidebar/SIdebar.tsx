@@ -1,25 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../Header';
 import './Sidebar.less';
-import { useSelector, useDispatch } from 'react-redux'
-import { Button } from 'antd';
-import { changeName } from '../actions/actions';
+import { useSelector, useDispatch, connect } from 'react-redux'
+import { Button, Spin } from 'antd';
+import { changeName, fecthComments } from '../actions/actions';
 
 
-const Sidebar: React.FC = (props: any) => {
 
-    const login = useSelector((state: any) => {
-        console.log('LOGIIIIN', state)
-        return state.header.login
+const Sidebar: React.FC<any> = ({ comments, onFetchComments, loading }) => {
 
-    })
+    const [localComments, setLocalComments] = useState([])
 
-
-    const dispatch = useDispatch()
+    useEffect(() => {
+        setLocalComments(comments)
+    }, [comments])
 
     const onHandle = () => {
-        dispatch(changeName())
+        changeName()
+    }
+    const onHandleFetch = () => {
+        onFetchComments()
     }
 
 
@@ -27,12 +28,36 @@ const Sidebar: React.FC = (props: any) => {
         <div className="Sidebar">
             Sidebar
             <Button onClick={onHandle}>Кнопка Sidebara</Button>
-            <div>
-                А тут получили данные через хук {login}
-            </div>
+            <Button onClick={onHandleFetch}>Загрузить комменты</Button>
+            {
+                loading ? <Spin tip="Loading..." /> :
+                    localComments && localComments.length > 0 ?
+                        comments.map((el: any) => {
+                            return <div key={el.id}>{el.name}</div>
+                        }) : null
+            }
+
         </div >
     );
 
 }
 
-export default Sidebar;
+function mapStateToProps(state: any) {
+    console.log('mapstatetoprops sdasdasdasd> ', state)
+    const { comments } = state;
+    return {
+        comments: comments.commentsList,
+        loading: comments.commentsLoading
+    }
+}
+
+function mapDispatchToProps(dispatch: any) {
+    return {
+        onFetchComments: () => [
+            dispatch(fecthComments())
+        ]
+    }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);
